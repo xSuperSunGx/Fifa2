@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example 05: OO-Programming</title>
+     <script src="/data/teams_fifa22.js"></script>
+     <script src="/data/players_fifa22.js"></script>
+</head>
+<body>
+Press <b>F12</b> to see the results
+<br/><br/><br/><br/><br/>
+
+<select id="teams" onchange="change_teams">
+</select>
+
+<select id="team_members">
+</select>
+
+<button id="team_add_1" disabled onclick="add(1)">Add to Team 1</button>
+<button id="team_remove_1" disabled onclick="remove(1)">Remove from Team 1</button>
+<button id="team_add_2" disabled onclick="add(2)">Add to Team 2</button>
+<button id="team_remove_2" disabled onclick="remove(2)">Remove from Team 2</button>
+
+<img id="player_img">
+</img>
+<p id="ID"></p>
+<p id="FullName"></p>
+<p id="TotalStats"></p>
+<p id="Age"></p>
+<p id="nationality"></p>
+
+<script>
+    var selected = "";
+    var team_1 = [];
+    var team_2 = [];
+ function change_teams(e)
+{
+    let teams_sel = e.target; //which team is now selected
+    let v = teams_sel.value; //get the value of the selected team for further queries
+    let t = teams_sel.options[teams_sel.selectedIndex].text; //which text is associated with the value
+    console.log(v + t + e);
+
+    let team_members_sel = document.getElementById("team_members");
+    let current_players = players.filter(p => p.Club === t); //get all players of the selected team
+    console.log(current_players);
+    team_members_sel.innerHTML = ""; //clear the player option box
+    current_players.forEach(d => team_members_sel.add(new Option(d.Name,d.ID))); //add all players to the option box
+}
+
+function change_team_player(e)
+{
+    let player_sel = e.target;
+    let v = player_sel.value;
+    let t = player_sel.options[player_sel.selectedIndex].text;
+
+    let curr_player = players.find(p => p.Name === t);
+    selected = curr_player;
+    console.log(curr_player.PhotoUrl);
+    console.log(team_1);
+    console.log(team_2);
+    let player_img = document.getElementById("player_img");
+    player_img.src = curr_player.PhotoUrl;
+    let ID = document.getElementById("ID");
+    ID.innerHTML = "ID: " + curr_player.ID;
+    let player_fullname = document.getElementById("FullName");
+    player_fullname.innerHTML = "FullName: " + curr_player.FullName;
+    let player_totalstats = document.getElementById("TotalStats");
+    player_totalstats.innerHTML = "TotalStats: " + curr_player.TotalStats;
+    let player_age = document.getElementById("Age");
+    player_age.innerHTML = "Age: " + curr_player.Age;
+    let player_nat = document.getElementById("nationality");
+    player_nat.innerHTML = "Nationality: " + curr_player.Nationality;
+
+    let button_add_1 = document.getElementById("team_add_1");
+    let button_add_2 = document.getElementById("team_add_2");
+    let button_remove_1 = document.getElementById("team_remove_1");
+    let button_remove_2 = document.getElementById("team_remove_2");
+    if(team_1.includes(selected.ID)) {
+        button_remove_1.removeAttribute("disabled");
+        button_add_1.setAttribute("disabled", "");
+    } else {
+        button_add_1.removeAttribute("disabled");
+        button_remove_1.setAttribute("disabled", "");
+    }
+    if(team_2.includes(selected.ID)) {
+        button_remove_2.removeAttribute("disabled");
+        button_add_2.setAttribute("disabled", "");
+    } else {
+        button_add_2.removeAttribute("disabled");
+        button_remove_2.setAttribute("disabled", "");
+    }
+
+}
+
+function add(index) {
+    switch (index) {
+        case 1: if(!team_1.includes(selected.ID)) team_1.push(selected.ID);break;
+        case 2: if(!team_2.includes(selected.ID)) team_2.push(selected.ID);break;
+    }
+ }
+
+function remove(index) {
+     switch (index) {
+         case 1: if(team_1.includes(selected.ID)) team_1.splice(team_1.indexOf(selected.ID),team_1.indexOf(selected.ID) < 1 ? 1 : team_1.indexOf(selected.ID));break;
+         case 2: if(team_2.includes(selected.ID)) team_2.splice(team_2.indexOf(selected.ID),team_2.indexOf(selected.ID) < 1 ? 1 : team_2.indexOf(selected.ID));break;
+     }
+}
+
+console.log(teams);
+console.log(players[10]);
+
+//fill the teams option box with the team names
+let teams_sel = document.getElementById("teams");
+teams.forEach(d => teams_sel.add(new Option(d.Name,d.ID)));
+teams_sel.addEventListener("change", change_teams);
+
+let team_members_sel = document.getElementById("team_members");
+team_members_sel.addEventListener("change", change_team_player); //this is another way how to add an eventlistener to the option box
+</script>
+</body>
+</html>
